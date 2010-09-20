@@ -6,10 +6,10 @@
   <property name="description"
     i18n:translate="">File with publication accreditation by Izenpe</property>
   <property name="content_meta_type">AccreditedFile</property>
-  <property name="content_icon">document_icon.gif</property>
+  <property name="content_icon">file_icon.gif</property>
   <property name="product">cs.accreditedfile</property>
   <property name="factory">addAccreditedFile</property>
-  <property name="immediate_view">atct_edit</property>
+  <property name="immediate_view">view</property>
   <property name="global_allow">True</property>
   <property name="filter_content_types">False</property>
   <property name="allow_discussion">False</property>
@@ -25,8 +25,9 @@
     url_expr="string:${object_url}/" visible="True">
     <permission value="View" />
   </action>
-  <action title="Edit" action_id="edit" category="object" condition_expr=""
-    url_expr="string:${object_url}/edit" visible="True">
+  <action title="Edit" action_id="edit" category="object" condition_expr="not:object/@@plone_lock_info/is_locked_for_current_user|python:True"
+	  url_expr="string:${object_url}/edit" visible="True"
+	  i18n:attributes="title">
     <permission value="Modify portal content" />
   </action>
 </object>
