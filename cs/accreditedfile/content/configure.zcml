@@ -6,5 +6,11 @@
   <!-- configure your content components here -->
   
   <!-- -*- extra stuff goes here -*- -->
+  <class class=".accreditedfile.AccreditedFile">
+    <require
+        permission="zope2.View"
+        interface="..interfaces.IAccreditedFile"
+        />
+  </class>
 
 </configure>

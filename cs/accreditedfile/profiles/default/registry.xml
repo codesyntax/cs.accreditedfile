@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<registry>
+  <record name="cs.accreditedfile.accreditername">
+    <field type="plone.registry.field.TextLine">
+      <title>Accrediter name</title>
+    </field>
+    <value>IZENPE</value>
+  </record>
+  <record name="cs.accreditedfile.accrediterurl">
+    <field type="plone.registry.field.TextLine">
+      <title>Accrediter URL</title>
+    </field>
+    <value>http://www.izenpe.com</value>
+  </record>
+  <record name="cs.accreditedfile.accrediterendpointurl">
+    <field type="plone.registry.field.TextLine">
+      <title>Accrediter endpoint URL</title>
+    </field>
+    <value>http://econstancia.izenpe.com:5544</value>
+  </record>
+  <record name="cs.accreditedfile.applicationkey">
+    <field type="plone.registry.field.Text">
+      <title>Private Key for the accreditation process</title>
+    </field>
+    <value>http://econstancia.izenpe.com:5544</value>
+  </record>
+
+</registry>

@@ -7,4 +7,14 @@
 
   <!-- -*- extra stuff goes here -*- -->
 
+  <browser:page
+      for="..interfaces.IAccreditedFile"
+      name="view"
+      class=".accreditedfileview.AccreditedFileView"
+      template="accreditedfileview.pt"
+      allowed_interface=".accreditedfileview.IAccreditedFileView"
+      permission="zope.Public"
+      />
+
+
 </configure>

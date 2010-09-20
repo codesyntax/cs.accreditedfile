@@ -1,0 +1,24 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      lang="en"
+      metal:use-macro="here/main_template/macros/master"
+      i18n:domain="cs.accreditedfile">
+<body>
+    <div metal:fill-slot="content-core">
+      <metal:field use-macro="python:context.widget('file', mode='view')">
+        Body text
+      </metal:field>
+
+      <tal:accreditation condition="context/url">
+
+        <h2 i18n:translate="heading_publication_credit">
+          Publication accreditation
+        </h2>
+      
+        <p i18n:translate="accreditation_message">
+          <span id="accrediter" i18n:name="accrediter" tal:content="view/accrediter">IZENPE</span> offers publication accreditation for this document at this URL:<br/><a href="" tal:content="context/url" tal:attributes="href context/url" i18n:name="accreditation_url">http://www.izenpe.com</a>
+        </p>
+      </tal:accreditation>      
+
+    </div>
+</body>
+</html>

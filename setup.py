@@ -56,6 +56,7 @@ setup(name='cs.accreditedfile',
       zip_safe=False,
       install_requires=['setuptools',
                         # -*- Extra requirements: -*-
+                        'plone.app.registry',
                         ],
       tests_require=tests_require,
       extras_require=dict(tests=tests_require),
