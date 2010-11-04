@@ -28,8 +28,16 @@ def getPublicationAccreditation(object, event):
     pkey_path = createTemporaryFile(private_key)
     url = object.absolute_url()
     ip = socket.gethostbyaddr(url.split('/')[2])[2][0]
+
     if object.expiration_date is None:
-        f_revision = DT2dt(aq_parent(object).expiration_date)
+        # No expiration date, try finding it in parent
+        if aq_parent(object).expiration_date is not None:
+            f_revision = DT2dt(aq_parent(object).expiration_date)
+        else:
+            # Uff, show error message
+            putils.addPortalMessage(_(u'You have not set an expiration date for this file. Set it first and then try to get the accreditation using the menu'), type='warning')
+            return
+
     else:
         f_revision = DT2dt(object.expiration_date)
 
