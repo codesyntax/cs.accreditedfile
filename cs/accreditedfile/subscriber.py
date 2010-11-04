@@ -7,6 +7,8 @@ import base64, socket, tempfile, os
 
 from helpers import getClient
 
+from cs.accreditedfile import accreditedfileMessageFactory as _
+from Products.CMFCore.utils import getToolByName
 
 def createTemporaryFile(contents):
     filehandle, filepath = tempfile.mkstemp()
@@ -15,11 +17,13 @@ def createTemporaryFile(contents):
     return filepath
 
 def getPublicationAccreditation(object, event):
+    putils = getToolByName(object, 'portal_utils')
     registry = getUtility(IRegistry)
     certificate = registry[u'cs.accreditedfile.applicationkey']
     private_key = registry[u'cs.accreditedfile.applicationcertificate']
     endpointurl = registry[u'cs.accreditedfile.accrediterendpointurl']
 
+    errocode = None
     cert_path = createTemporaryFile(certificate)
     pkey_path = createTemporaryFile(private_key)
     url = object.absolute_url()
@@ -51,6 +55,13 @@ def getPublicationAccreditation(object, event):
                 for item in data.item:
                     if item.key == 'url_pdf':
                         object.url = data.value
+
+        if errorcode is not None:
+            putils.addPortalMessage(_(u'Accreditation correct'), type='info')
+        else:
+            putils.addPortalMessage(_(u'An error occurred getting the accreditation. Try again with the menu option: %(errorcode)s') % {'errorcode': errorcode}, type='warning')
+    except:
+        putils.addPortalMessage(_(u'An error occurred getting the accreditation. Try again with the menu option'), type='warning')
 
     finally:
         os.remove(cert_path)
