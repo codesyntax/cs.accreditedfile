@@ -16,5 +16,11 @@
       permission="zope.Public"
       />
 
+  <browser:page
+      for="..interfaces.IAccreditedFile"
+      name="get_external_accreditation"
+      class=".accreditation.Accreditation"
+      permission="cmf.ModifyPortalContent"
+      />
 
 </configure>

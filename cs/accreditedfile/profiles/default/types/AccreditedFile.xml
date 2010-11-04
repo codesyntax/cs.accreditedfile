@@ -32,4 +32,9 @@
 	  i18n:attributes="title">
     <permission value="Modify portal content" />
   </action>
+  <action title="Get accreditation" action_id="get_accreditation" category="object" condition_expr="not:object/url"
+	  url_expr="string:${object_url}/get_external_accreditation" visible="True"
+	  i18n:attributes="title">
+    <permission value="Modify portal content" />
+  </action>
 </object>
