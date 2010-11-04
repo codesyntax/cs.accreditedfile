@@ -22,7 +22,6 @@ def getPublicationAccreditation(object, event):
 
     cert_path = createTemporaryFile(certificate)
     pkey_path = createTemporaryFile(private_key)
-    client = getClient(endpointurl, pkey_path, cert_path)
     url = object.absolute_url()
     ip = socket.gethostbyaddr(url.split('/')[2])[2][0]
     if object.expiration_date is None:
@@ -33,6 +32,7 @@ def getPublicationAccreditation(object, event):
     f_extension = object.getFilename().rsplit('.')[-1]
     
     try:
+        client = getClient(endpointurl, pkey_path, cert_path)
         data = client.service.constancia(mi_url=base64.encodestring(url),
                                          mi_ip=ip,
                                          mi_puerto=url.startswith('https:') and 443 or 8080,
