@@ -17,7 +17,7 @@ def createTemporaryFile(contents):
     return filepath
 
 def getPublicationAccreditation(object, event):
-    putils = getToolByName(object, 'portal_utils')
+    putils = getToolByName(object, 'plone_utils')
     registry = getUtility(IRegistry)
     certificate = registry[u'cs.accreditedfile.applicationkey']
     private_key = registry[u'cs.accreditedfile.applicationcertificate']
