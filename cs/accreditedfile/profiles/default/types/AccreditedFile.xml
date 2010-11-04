@@ -9,6 +9,8 @@
   <property name="content_icon">file_icon.gif</property>
   <property name="product">cs.accreditedfile</property>
   <property name="factory">addAccreditedFile</property>
+  <property name="add_view_expr"></property>
+  <property name="link_target"></property>
   <property name="immediate_view">view</property>
   <property name="global_allow">True</property>
   <property name="filter_content_types">False</property>
@@ -17,7 +19,7 @@
   <property name="view_methods">
     <element value="view" />
   </property>
-  <alias from="(Default)" to="(dynamic view)" />
+  <alias from="(Default)" to="view" />
   <alias from="edit" to="atct_edit" />
   <alias from="sharing" to="@@sharing" />
   <alias from="view" to="(selected layout)" />
