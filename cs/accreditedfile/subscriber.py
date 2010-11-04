@@ -19,11 +19,11 @@ def createTemporaryFile(contents):
 def getPublicationAccreditation(object, event):
     putils = getToolByName(object, 'plone_utils')
     registry = getUtility(IRegistry)
-    certificate = registry[u'cs.accreditedfile.applicationkey']
-    private_key = registry[u'cs.accreditedfile.applicationcertificate']
+    private_key = registry[u'cs.accreditedfile.applicationkey']
+    certificate = registry[u'cs.accreditedfile.applicationcertificate']
     endpointurl = registry[u'cs.accreditedfile.accrediterendpointurl']
 
-    errocode = None
+    errorcode = None
     cert_path = createTemporaryFile(certificate)
     pkey_path = createTemporaryFile(private_key)
     url = object.absolute_url()
@@ -57,19 +57,29 @@ def getPublicationAccreditation(object, event):
             if item.key == 'tipo' and item.value == 'error':
                 # Handle error
                 for item in data.item:
-                    if item.key == 'coderror':
+                    if object.Language() == 'eu' and item.key == 'msjerror_eus':
                         errorcode = item.value
+                    elif object.Language() == 'es' and item.key == 'msjerror_cas':
+                        errorcode = item.value
+                    elif object.Language() not in ['eu', 'es'] and item.key == 'coderror':
+                        errorcode = item.value
+                        
             elif item.key == 'tipo' and item.value == 'url':
                 for item in data.item:
                     if item.key == 'url_pdf':
                         object.url = data.value
 
         if errorcode is not None:
-            putils.addPortalMessage(_(u'Accreditation correct'), type='info')
-        else:
             putils.addPortalMessage(_(u'An error occurred getting the accreditation. Try again with the menu option: %(errorcode)s') % {'errorcode': errorcode}, type='warning')
-    except:
+        else:
+            putils.addPortalMessage(_(u'Accreditation correct'), type='info')
+
+    except Exception,e:
         putils.addPortalMessage(_(u'An error occurred getting the accreditation. Try again with the menu option'), type='warning')
+
+        from logging import getLogger
+        log = getLogger('cs.accredittedfile')
+        log.info('Exception: %s' % e)        
 
     finally:
         os.remove(cert_path)
