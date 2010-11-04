@@ -22,7 +22,12 @@
     <field type="plone.registry.field.Text">
       <title>Private Key for the accreditation process</title>
     </field>
-    <value>http://econstancia.izenpe.com:5544</value>
+    <value>XXXXXXXXXXXXXXXX</value>
   </record>
-
+  <record name="cs.accreditedfile.applicationcertificate">
+    <field type="plone.registry.field.Text">
+      <title>x509 certificate for the accreditation process</title>
+    </field>
+    <value>XXXXXXXXXXXXXXXX</value>
+  </record>
 </registry>
