@@ -56,18 +56,18 @@ def getPublicationAccreditation(object, event):
         for item in data.item:
             if item.key == 'tipo' and item.value == 'error':
                 # Handle error
-                for item in data.item:
-                    if object.Language() == 'eu' and item.key == 'msjerror_eus':
+                for item2 in data.item:
+                    if object.Language() == 'eu' and item2.key == 'msjerror_eus':
                         errorcode = item.value
-                    elif object.Language() == 'es' and item.key == 'msjerror_cas':
+                    elif object.Language() == 'es' and item2.key == 'msjerror_cas':
                         errorcode = item.value
-                    elif object.Language() not in ['eu', 'es'] and item.key == 'coderror':
-                        errorcode = item.value
+                    elif object.Language() not in ['eu', 'es'] and item2.key == 'coderror':
+                        errorcode = item2.value
                         
             elif item.key == 'tipo' and item.value == 'url':
-                for item in data.item:
-                    if item.key == 'url_pdf':
-                        object.url = data.value
+                for item2 in data.item:
+                    if item2.key == 'url_pdf':
+                        object.url = item2.value
 
         if errorcode is not None:
             putils.addPortalMessage(_(u'An error occurred getting the accreditation. Try again with the menu option: %(errorcode)s') % {'errorcode': errorcode}, type='warning')
