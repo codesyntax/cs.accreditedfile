@@ -9,7 +9,7 @@
 
   <browser:page
       for="..interfaces.IAccreditedFile"
-      name="view"
+      name="accreditedfile_view"
       class=".accreditedfileview.AccreditedFileView"
       template="accreditedfileview.pt"
       allowed_interface=".accreditedfileview.IAccreditedFileView"
