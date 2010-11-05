@@ -60,12 +60,13 @@ class AccreditedFile(file.ATFile):
 
     def pre_validate(self, REQUEST=None, errors=None):
         super(file.ATFile, self).pre_validate(REQUEST, errors)
-        if self.expiration_date is None:
+        
+        if not REQUEST.form.get('expirationDate'):
             parent = aq_parent(self)
             if parent.expiration_date is None:
                 error = _PMF(u'error_required',
                              default=u'${name} is required, please correct.',
-                             mapping={'name': 'expirationDate'})
+                             mapping={'name': _PMF('label_expiration_date')})
                 error = translate(error, context=REQUEST)
                 errors['expirationDate'] = error
             else:
