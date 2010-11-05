@@ -16,7 +16,7 @@
     <field type="plone.registry.field.TextLine">
       <title>Accrediter endpoint URL</title>
     </field>
-    <value>http://econstancia.izenpe.com:5544</value>
+    <value>https://epublicacion.izenpe.com:8445/constancia_publicacion/services/IzenpeConstanciaPubDes?wsdl</value>
   </record>
   <record name="cs.accreditedfile.applicationkey">
     <field type="plone.registry.field.Text">
