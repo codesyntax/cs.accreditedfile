@@ -2,10 +2,13 @@
 """
 
 from zope.interface import implements
+from zope.i18n import translate
+from Acquisition import aq_parent
 
 from Products.Archetypes import atapi
 from Products.ATContentTypes.content import file
 from Products.ATContentTypes.content import schemata
+from Products.Archetypes import PloneMessageFactory as _PMF
 
 # -*- Message Factory Imported Here -*-
 from cs.accreditedfile import accreditedfileMessageFactory as _
@@ -36,6 +39,10 @@ AccreditedFileSchema['description'].storage = atapi.AnnotationStorage()
 
 schemata.finalizeATCTSchema(AccreditedFileSchema, moveDiscussion=False)
 
+# Move dates to main schemata. finalizeSchemata moves them to 'dates'
+AccreditedFileSchema.changeSchemataForField('effectiveDate', 'default')
+AccreditedFileSchema.changeSchemataForField('expirationDate', 'default')
+
 
 class AccreditedFile(file.ATFile):
     """File with publication accreditation by Izenpe"""
@@ -50,5 +57,18 @@ class AccreditedFile(file.ATFile):
     # -*- Your ATSchema to Python Property Bridges Here ... -*-
     url = atapi.ATFieldProperty('url')
 
+
+    def pre_validate(self, REQUEST=None, errors=None):
+        super(file.ATFile, self).pre_validate(REQUEST, errors)
+        if self.expiration_date is None:
+            parent = aq_parent(self)
+            if parent.expiration_date is None:
+                error = _PMF(u'error_required',
+                             default=u'${name} is required, please correct.',
+                             mapping={'name': 'expirationDate'})
+                error = translate(error, context=REQUEST)
+                errors['expirationDate'] = error
+            else:
+                self.expiration_date = parent.expiration_date
 
 atapi.registerType(AccreditedFile, PROJECTNAME)

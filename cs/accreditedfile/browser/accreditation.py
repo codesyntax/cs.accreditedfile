@@ -6,7 +6,7 @@ from cs.accreditedfile.subscriber import getPublicationAccreditation
 class Accreditation(BrowserView):
     def __call__(self):
         context = aq_inner(self.context)
-        getPublicationAccreditation(context, None)
+        getPublicationAccreditation(context)
         return self.request.response.redirect(context.absolute_url() + '/view')
 
 

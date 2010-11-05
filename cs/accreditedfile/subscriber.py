@@ -16,7 +16,11 @@ def createTemporaryFile(contents):
     os.close(filehandle)
     return filepath
 
-def getPublicationAccreditation(object, event):
+def file_checks(object, event):
+    getPublicationAccreditation(object)
+    
+
+def getPublicationAccreditation(object):
     putils = getToolByName(object, 'plone_utils')
     registry = getUtility(IRegistry)
     private_key = registry[u'cs.accreditedfile.applicationkey']
@@ -31,8 +35,10 @@ def getPublicationAccreditation(object, event):
 
     if object.expiration_date is None:
         # No expiration date, try finding it in parent
-        if aq_parent(object).expiration_date is not None:
-            f_revision = DT2dt(aq_parent(object).expiration_date)
+        parent = aq_parent(object)
+        if parent.expiration_date is not None:
+            f_revision = DT2dt(parent.expiration_date)
+            object.expiration_date = parent.expiration_date
         else:
             # Uff, show error message
             putils.addPortalMessage(_(u'You have not set an expiration date for this file. Set it first and then try to get the accreditation using the menu'), type='warning')
