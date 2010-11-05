@@ -7,7 +7,7 @@ class Accreditation(BrowserView):
     def __call__(self):
         context = aq_inner(self.context)
         getPublicationAccreditation(context, None)
-        return self.request.response.redirect(context.absolute_url())
+        return self.request.response.redirect(context.absolute_url() + '/view')
 
 
         
