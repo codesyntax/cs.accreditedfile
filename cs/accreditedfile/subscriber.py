@@ -57,8 +57,6 @@ def getPublicationAccreditation(object):
     except:
         ip = '127.0.0.1'
 
-    import pdb;pdb.set_trace()
-    
     if object.expiration_date is None:
         # No expiration date, try finding it in parent
         parent = aq_parent(object)
@@ -99,7 +97,7 @@ def getPublicationAccreditation(object):
             elif item.key == 'tipo' and item.value == 'url':
                 for item2 in data.item:
                     if item2.key == 'url_pdf':
-                        object.url = item2.value
+                        object.setUrl(item2.value)
 
         if errorcode is not None:
             putils.addPortalMessage(_(u'An error occurred getting the accreditation. Try again with the menu option: %(errorcode)s') % {'errorcode': errorcode}, type='warning')
