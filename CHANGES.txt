@@ -1,8 +1,13 @@
 Changelog
 =========
 
-1.0 (xxxx-xx-xx)
+1.0.1 (2010/12/22)
+------------------
+- Fix documentation
+  [erral]
+
+1.0 (2010/12/22)
 ----------------
 
-- Created recipe with ZopeSkel
-  [""]
+- Initial release
+  ["erral"]
