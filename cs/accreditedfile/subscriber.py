@@ -37,7 +37,7 @@ def accreditation_hook(succeeded, object_uid, parent):
         uid_catalog = getToolByName(aq_inner(parent), 'uid_catalog')
         items = uid_catalog(UID=object_uid)
         if items:
-            getPublicationAccreditation(items[0])            
+            getPublicationAccreditation(items[0].getObject())            
             log.info('Got accreditation')
 
 
