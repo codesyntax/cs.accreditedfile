@@ -60,7 +60,7 @@ class AccreditedFile(file.ATFile):
 
     def pre_validate(self, REQUEST=None, errors=None):
         super(file.ATFile, self).pre_validate(REQUEST, errors)
-        
+        import pdb;pdb.set_trace()        
         if not REQUEST.form.get('expirationDate'):
             parent = aq_parent(self)
             if parent.expiration_date is None:
