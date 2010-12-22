@@ -10,6 +10,8 @@ from helpers import getClient
 from cs.accreditedfile import accreditedfileMessageFactory as _
 from Products.CMFCore.utils import getToolByName
 
+import transaction
+
 def createTemporaryFile(contents):
     filehandle, filepath = tempfile.mkstemp()
     os.write(filehandle, contents)
@@ -17,8 +19,20 @@ def createTemporaryFile(contents):
     return filepath
 
 def file_checks(object, event):
-    getPublicationAccreditation(object)
-    
+    # Object is published after the transaction
+    # commit, so we have to register a after-transaction-commit
+    # hook to call the accreditation method
+    t = transaction.get()
+    t.addAfterCommitHook(accreditation_hook, object)
+    #getPublicationAccreditation(object)
+
+def accreditation_hook(succeeded, object):
+    if succeeded:
+        from logging import getLogger
+        log = getLogger('accreditation_hook')       
+        log.info('Calling')
+        getPublicationAccreditation(object)
+        log.info('OK')
 
 def getPublicationAccreditation(object):
     putils = getToolByName(object, 'plone_utils')
@@ -31,7 +45,10 @@ def getPublicationAccreditation(object):
     cert_path = createTemporaryFile(certificate)
     pkey_path = createTemporaryFile(private_key)
     url = object.absolute_url()
-    ip = socket.gethostbyaddr(url.split('/')[2])[2][0]
+    try:
+        ip = socket.gethostbyaddr(url.split('/')[2])[2][0]
+    except:
+        ip = '127.0.0.1'
 
     if object.expiration_date is None:
         # No expiration date, try finding it in parent
