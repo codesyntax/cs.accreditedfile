@@ -57,6 +57,8 @@ def getPublicationAccreditation(object):
     except:
         ip = '127.0.0.1'
 
+    import pdb;pdb.set_trace()
+    
     if object.expiration_date is None:
         # No expiration date, try finding it in parent
         parent = aq_parent(object)
