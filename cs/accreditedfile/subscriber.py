@@ -23,15 +23,18 @@ def file_checks(object, event):
     # commit, so we have to register a after-transaction-commit
     # hook to call the accreditation method
     t = transaction.get()
-    t.addAfterCommitHook(accreditation_hook, object)
-    #getPublicationAccreditation(object)
+    t.addAfterCommitHook(accreditation_hook, kws={'object_uid':object.UID(), 'parent':aq_parent(object)})
 
-def accreditation_hook(succeeded, object):
+def accreditation_hook(succeeded, object_uid, parent):
     if succeeded:
         from logging import getLogger
         log = getLogger('accreditation_hook')       
         log.info('Calling')
-        getPublicationAccreditation(object)
+        uid_catalog = getToolByName(parent, 'uid_catalog')
+        items = uid_catalog(UID=object_uid)
+        if items:
+            getPublicationAccreditation(items[0])            
+
         log.info('OK')
 
 def getPublicationAccreditation(object):
