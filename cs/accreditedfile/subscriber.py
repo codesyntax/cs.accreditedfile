@@ -22,20 +22,24 @@ def file_checks(object, event):
     # Object is published after the transaction
     # commit, so we have to register a after-transaction-commit
     # hook to call the accreditation method
+    parent = aq_parent(object)
+    if not object.expiration_date:
+        object.expiration_date = parent.expiration_date
+
     t = transaction.get()
-    t.addAfterCommitHook(accreditation_hook, kws={'object_uid':object.UID(), 'parent':aq_parent(object)})
+    t.addAfterCommitHook(accreditation_hook, kws={'object_uid':object.UID(), 'parent':parent})
 
 def accreditation_hook(succeeded, object_uid, parent):
     if succeeded:
         from logging import getLogger
-        log = getLogger('accreditation_hook')       
+        log = getLogger('cs.accreditedfile.accreditation_hook')       
         log.info('Calling')
         uid_catalog = getToolByName(parent, 'uid_catalog')
         items = uid_catalog(UID=object_uid)
         if items:
             getPublicationAccreditation(items[0])            
+            log.info('Got accreditation')
 
-        log.info('OK')
 
 def getPublicationAccreditation(object):
     putils = getToolByName(object, 'plone_utils')
