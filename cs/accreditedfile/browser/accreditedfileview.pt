@@ -8,14 +8,14 @@
         Body text
       </metal:field>
 
-      <tal:accreditation condition="context/url">
+      <tal:accreditation condition="context/getUrl">
 
         <h2 i18n:translate="heading_publication_credit">
           Publication accreditation
         </h2>
       
         <p i18n:translate="accreditation_message">
-          <span id="accrediter" i18n:name="accrediter" tal:content="view/accrediter">IZENPE</span> offers publication accreditation for this document at this URL:<br/><a href="" tal:content="context/url" tal:attributes="href context/url" i18n:name="accreditation_url">http://www.izenpe.com</a>
+          <span id="accrediter" i18n:name="accrediter" tal:content="view/accrediter">IZENPE</span> offers publication accreditation for this document at this URL:<br/><a href="" tal:content="context/getUrl" tal:attributes="href context/getUrl" i18n:name="accreditation_url">http://www.izenpe.com</a>
         </p>
       </tal:accreditation>      
 
