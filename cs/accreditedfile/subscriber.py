@@ -1,4 +1,4 @@
-from Acquisition import aq_parent
+from Acquisition import aq_inner, aq_parent
 from zope.component import getUtility
 from plone.registry.interfaces import IRegistry
 from Products.ATContentTypes.utils import DT2dt
@@ -34,7 +34,7 @@ def accreditation_hook(succeeded, object_uid, parent):
         from logging import getLogger
         log = getLogger('cs.accreditedfile.accreditation_hook')       
         log.info('Calling')
-        uid_catalog = getToolByName(parent, 'uid_catalog')
+        uid_catalog = getToolByName(aq_inner(parent), 'uid_catalog')
         items = uid_catalog(UID=object_uid)
         if items:
             getPublicationAccreditation(items[0])            
