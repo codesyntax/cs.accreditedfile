@@ -72,11 +72,23 @@ def getPublicationAccreditation(object):
         f_revision = DT2dt(object.expiration_date)
 
     field = object.getField('file')
-    try:
-        f_extension = field.getFilename(object).rsplit('.')[-1]
-    except:
-        f_extension = 'pdf'
-    
+    f_extension = field.getFilename(object).rsplit('.')[-1]
+    if len(f_extension) > 4:
+        # if the extension length is bigger than 4
+        # we haven't found the correct extension
+        # so try guessing from the content-type
+        mr = getToolByName(object, 'mimetypes_registry')
+        ct = field.getContentType(object)
+        if ct:
+            mts = mr.lookup(ct)
+            for mt in mts:
+                extensions = mt.extensions
+                if extensions:
+                    f_extension = extensions[0]
+                    break
+        else:
+            f_extension = 'pdf'
+            
     try:
         client = getClient(endpointurl, pkey_path, cert_path)
         data = client.service.constancia(mi_url=base64.encodestring(url),
