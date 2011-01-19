@@ -71,7 +71,11 @@ def getPublicationAccreditation(object):
     else:
         f_revision = DT2dt(object.expiration_date)
 
-    f_extension = object.getFilename().rsplit('.')[-1]
+    field = object.getField('file')
+    try:
+        f_extension = field.getFilename(object).rsplit('.')[-1]
+    except:
+        f_extension = 'pdf'
     
     try:
         client = getClient(endpointurl, pkey_path, cert_path)
