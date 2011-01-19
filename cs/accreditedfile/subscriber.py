@@ -42,6 +42,9 @@ def accreditation_hook(succeeded, object_uid, parent):
 
 
 def getPublicationAccreditation(object):
+    from logging import getLogger
+    log = getLogger('cs.accreditedfile.getPublicationAccreditation')       
+
     putils = getToolByName(object, 'plone_utils')
     registry = getUtility(IRegistry)
     private_key = registry[u'cs.accreditedfile.applicationkey']
@@ -66,6 +69,7 @@ def getPublicationAccreditation(object):
         else:
             # Uff, show error message
             putils.addPortalMessage(_(u'You have not set an expiration date for this file. Set it first and then try to get the accreditation using the menu'), type='warning')
+            log.info('Not expiration date')
             return
 
     else:
@@ -117,14 +121,12 @@ def getPublicationAccreditation(object):
 
         if errorcode is not None:
             putils.addPortalMessage(_(u'An error occurred getting the accreditation. Try again with the menu option: %(errorcode)s') % {'errorcode': errorcode}, type='warning')
+            log.info('Error: %s' % errorcode)
         else:
             putils.addPortalMessage(_(u'Accreditation correct'), type='info')
 
     except Exception,e:
         putils.addPortalMessage(_(u'An error occurred getting the accreditation. Try again with the menu option'), type='warning')
-
-        from logging import getLogger
-        log = getLogger('cs.accredittedfile')
         log.info('Exception: %s' % e)        
 
     finally:
