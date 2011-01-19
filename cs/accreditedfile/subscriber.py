@@ -118,6 +118,7 @@ def getPublicationAccreditation(object):
                 for item2 in data.item:
                     if item2.key == 'url_pdf':
                         object.setUrl(item2.value)
+                        log.info(item2.value)
 
         if errorcode is not None:
             putils.addPortalMessage(_(u'An error occurred getting the accreditation. Try again with the menu option: %(errorcode)s') % {'errorcode': errorcode}, type='warning')
