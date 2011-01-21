@@ -82,7 +82,7 @@ def accreditation(object):
         # add the http beforehand, so we have 
         # to add it manually, removing the part
         # corresponding to the plone-site id
-        url = siteurl + '/' + url.split(plonesiteid)[-1]
+        url = siteurl + url.split(plonesiteid)[-1]
 
     f_revision = DT2dt(DateTime(object.ExpirationDate()))
     field = object.getField('file')
