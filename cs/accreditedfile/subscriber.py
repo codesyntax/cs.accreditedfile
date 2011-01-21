@@ -2,6 +2,7 @@ from Acquisition import aq_inner, aq_parent
 from zope.component import getUtility
 from plone.registry.interfaces import IRegistry
 from Products.ATContentTypes.utils import DT2dt
+from DateTime import DateTime
 
 import base64, socket, tempfile, os
 
@@ -23,8 +24,8 @@ def file_checks(object, event):
     # commit, so we have to register a after-transaction-commit
     # hook to call the accreditation method
     parent = aq_parent(object)
-    if not object.expiration_date:
-        object.expiration_date = parent.expiration_date
+    if not object.ExpirationDate() or object.ExpirationDate() == 'None':
+        object.setExpirationDate(DateTime(parent.ExpirationDate()))
 
     t = transaction.get()
     #t.addAfterCommitHook(accreditation_hook, kws={'object_uid':object.UID(), 'parent':parent})
@@ -71,7 +72,7 @@ def accreditation(object):
     pkey_path = createTemporaryFile(private_key)
     url = object.absolute_url()
 
-    f_revision = DT2dt(object.expiration_date)
+    f_revision = DT2dt(DateTime(object.ExpirationDate()))
     field = object.getField('file')
     f_extension = field.getFilename(object).rsplit('.')[-1]
     
