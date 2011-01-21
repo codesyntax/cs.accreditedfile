@@ -66,11 +66,23 @@ def accreditation(object):
     private_key = registry[u'cs.accreditedfile.applicationkey']
     certificate = registry[u'cs.accreditedfile.applicationcertificate']
     endpointurl = registry[u'cs.accreditedfile.accrediterendpointurl']
+    plonesiteid = registry[u'cs.accreditedfile.plonesiteid']
+    siteurl = registry[u'cs.accreditedfile.plonesiteurl']
+
 
     errorcode = None
     cert_path = createTemporaryFile(certificate)
     pkey_path = createTemporaryFile(private_key)
     url = object.absolute_url()
+
+    if not url.startswith('http'):
+        # XXX
+        # Testing shows that calling this
+        # method from async processes does not
+        # add the http beforehand, so we have 
+        # to add it manually, removing the part
+        # corresponding to the plone-site id
+        url = 'http://' + siteurl + '/' + url.split(plonesiteid)[-1]
 
     f_revision = DT2dt(DateTime(object.ExpirationDate()))
     field = object.getField('file')
