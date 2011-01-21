@@ -54,11 +54,13 @@ def accreditation_hook(succeeded, object_uid, parent):
             log.info('Got accreditation')
 
 
-def getPublicationAccreditation(object):
+def accreditation(object):
+    import logging
     from logging import getLogger
-    log = getLogger('cs.accreditedfile.getPublicationAccreditation')       
+    log = getLogger('cs.accreditedfile.accreditation')
+    log.addHandler(logging.handlers.RotatingFileHandler('cs.log'))
 
-    putils = getToolByName(object, 'plone_utils')
+    
     registry = getUtility(IRegistry)
     private_key = registry[u'cs.accreditedfile.applicationkey']
     certificate = registry[u'cs.accreditedfile.applicationcertificate']
@@ -68,44 +70,16 @@ def getPublicationAccreditation(object):
     cert_path = createTemporaryFile(certificate)
     pkey_path = createTemporaryFile(private_key)
     url = object.absolute_url()
+
+    f_revision = DT2dt(object.expiration_date)
+    field = object.getField('file')
+    f_extension = field.getFilename(object).rsplit('.')[-1]
+    
     try:
         ip = socket.gethostbyaddr(url.split('/')[2])[2][0]
     except:
         ip = '127.0.0.1'
 
-    if object.expiration_date is None:
-        # No expiration date, try finding it in parent
-        parent = aq_parent(object)
-        if parent.expiration_date is not None:
-            f_revision = DT2dt(parent.expiration_date)
-            object.expiration_date = parent.expiration_date
-        else:
-            # Uff, show error message
-            putils.addPortalMessage(_(u'You have not set an expiration date for this file. Set it first and then try to get the accreditation using the menu'), type='warning')
-            log.info('Not expiration date')
-            return
-
-    else:
-        f_revision = DT2dt(object.expiration_date)
-
-    field = object.getField('file')
-    f_extension = field.getFilename(object).rsplit('.')[-1]
-    if len(f_extension) > 4:
-        # if the extension length is bigger than 4
-        # we haven't found the correct extension
-        # so try guessing from the content-type
-        mr = getToolByName(object, 'mimetypes_registry')
-        ct = field.getContentType(object)
-        if ct:
-            mts = mr.lookup(ct)
-            for mt in mts:
-                extensions = mt.extensions
-                if extensions:
-                    f_extension = extensions[0]
-                    break
-        else:
-            f_extension = 'pdf'
-            
     try:
         client = getClient(endpointurl, pkey_path, cert_path)
         data = client.service.constancia(mi_url=base64.encodestring(url),
@@ -116,6 +90,7 @@ def getPublicationAccreditation(object):
                                          mi_fecharevision=f_revision,
                                          mi_tipo_firma=f_extension,
                                          )
+        
         for item in data.item:
             if item.key == 'tipo' and item.value == 'error':
                 # Handle error
@@ -130,28 +105,71 @@ def getPublicationAccreditation(object):
             elif item.key == 'tipo' and item.value == 'url':
                 for item2 in data.item:
                     if item2.key == 'url_pdf':
-                        import pdb;pdb.set_trace()
-                        
                         object.setUrl(item2.value)
                         log.info(item2.value)
                         log.info(object.getUrl())
-                        import transaction
-                        transaction.commit()
+                        result = 1
 
         if errorcode is not None:
-            putils.addPortalMessage(_(u'An error occurred getting the accreditation. Try again with the menu option: %(errorcode)s') % {'errorcode': errorcode}, type='warning')
             log.info('Error: %s' % errorcode)
-        else:
-            putils.addPortalMessage(_(u'Accreditation correct'), type='info')
+            result = errorcode
 
     except Exception,e:
-        putils.addPortalMessage(_(u'An error occurred getting the accreditation. Try again with the menu option'), type='warning')
         log.info('Exception: %s' % e)        
+        result = e
 
     finally:
         os.remove(cert_path)
         os.remove(pkey_path)
 
+    return result
 
-    
+
+
+def getPublicationAccreditation(object):
+    from logging import getLogger
+    log = getLogger('cs.accreditedfile.getPublicationAccreditation')       
+
+    putils = getToolByName(object, 'plone_utils')
+
+    if object.expiration_date is None:
+        # No expiration date, try finding it in parent
+        parent = aq_parent(object)
+        if parent.expiration_date is not None:
+            object.expiration_date = parent.expiration_date
+        else:
+            # Uff, show error message
+            putils.addPortalMessage(_(u'You have not set an expiration date for this file. Set it first and then try to get the accreditation using the menu'), type='warning')
+            log.info('Not expiration date')
+            return 
+
+    """
+    field = object.getField('file')
+    f_extension = field.getFilename(object).rsplit('.')[-1]
+    if len(f_extension) > 3:
+        # if the extension length is bigger than 2
+        # we haven't found the correct extension
+        # so try guessing from the content-type
+        mr = getToolByName(object, 'mimetypes_registry')
+        ct = field.getContentType(object)
+        if ct:
+            mts = mr.lookup(ct)
+            for mt in mts:
+                extensions = mt.extensions
+                if extensions:
+                    f_extension = extensions[0]
+                    break
+        else:
+            f_extension = 'pdf'
+    """
+
+    result = accreditation(object)
+
+    if result == 1:
+        log.info('Accreditation correct')
+        putils.addPortalMessage(_(u'Accreditation correct'), type='info')
+
+    else:
+        log.info('Error: %s' % result)
+        putils.addPortalMessage(_(u'An error occurred getting the accreditation. Try again with the menu option: %(errorcode)s') % {'errorcode': result}, type='warning')
 
