@@ -93,6 +93,9 @@ def accreditation(object):
                                          )
         
         for item in data.item:
+            log.info(item.key)
+            log.info(item.value)
+                
             if item.key == 'tipo' and item.value == 'error':
                 # Handle error
                 for item2 in data.item:
