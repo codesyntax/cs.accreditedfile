@@ -82,6 +82,8 @@ def accreditation(object):
         ip = '127.0.0.1'
 
     try:
+        import time
+        time.sleep(5)
         client = getClient(endpointurl, pkey_path, cert_path)
         data = client.service.constancia(mi_url=base64.encodestring(url),
                                          mi_ip=ip,
