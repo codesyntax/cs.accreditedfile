@@ -30,4 +30,17 @@
     </field>
     <value>XXXXXXXXXXXXXXXX</value>
   </record>
+  <record name="cs.accreditedfile.plonesiteid">
+    <field type="plone.registry.field.TextLine">
+      <title>PloneSite root object url</title>
+    </field>
+    <value>plonesite</value>
+  </record>
+  <record name="cs.accreditedfile.plonesiteurl">
+    <field type="plone.registry.field.TextLine">
+      <title>PloneSite public url</title>
+    </field>
+    <value>http://my.plone.com</value>
+  </record>
+
 </registry>
