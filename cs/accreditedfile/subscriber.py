@@ -27,8 +27,21 @@ def file_checks(object, event):
         object.expiration_date = parent.expiration_date
 
     t = transaction.get()
-    t.addAfterCommitHook(accreditation_hook, kws={'object_uid':object.UID(), 'parent':parent})
+    #t.addAfterCommitHook(accreditation_hook, kws={'object_uid':object.UID(), 'parent':parent})
+    #t.addAfterCommitHook(accreditation_async_hook, kws={'object':object})
+    accreditation_async_hook(1, object)
 
+def accreditation_async_hook(succeeded, object):
+
+    from logging import getLogger
+    log = getLogger('accreditation_async_hook')
+    
+    if succeeded:
+        from plone.app.async.interfaces import IAsyncService
+        async = getUtility(IAsyncService)
+        job = async.queueJob(getPublicationAccreditation, object)
+        log.info(job.status)
+        
 def accreditation_hook(succeeded, object_uid, parent):
     if succeeded:
         from logging import getLogger
