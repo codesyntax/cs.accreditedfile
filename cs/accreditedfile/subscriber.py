@@ -130,9 +130,13 @@ def getPublicationAccreditation(object):
             elif item.key == 'tipo' and item.value == 'url':
                 for item2 in data.item:
                     if item2.key == 'url_pdf':
+                        import pdb;pdb.set_trace()
+                        
                         object.setUrl(item2.value)
                         log.info(item2.value)
                         log.info(object.getUrl())
+                        import transaction
+                        transaction.commit()
 
         if errorcode is not None:
             putils.addPortalMessage(_(u'An error occurred getting the accreditation. Try again with the menu option: %(errorcode)s') % {'errorcode': errorcode}, type='warning')
