@@ -103,13 +103,13 @@ def get_accreditation_for_url(url, title, f_extension, f_revision, language):
     except:
         ip = '127.0.0.1'
 
-    try:
-        import pdb;pdb.set_trace()
-        
+    try:       
         import time
         time.sleep(5)
         log.info(url)
         log.info(f_extension)
+        import pdb;pdb.set_trace()
+
         client = getClient(endpointurl, pkey_path, cert_path)
         data = client.service.constancia(mi_url=base64.encodestring(url),
                                          mi_ip=ip,
