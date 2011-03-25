@@ -20,18 +20,19 @@ def createTemporaryFile(contents):
     return filepath
 
 def file_checks(object, event):
-    # Object is published after the transaction
-    # commit, so we have to register a after-transaction-commit
-    # hook to call the accreditation method
     parent = aq_parent(object)
-    if not object.ExpirationDate() or object.ExpirationDate() == 'None':
-        object.setExpirationDate(DateTime(parent.ExpirationDate()))
+    try:
+        if not object.ExpirationDate() or object.ExpirationDate() == 'None':
+            object.setExpirationDate(DateTime(parent.ExpirationDate()))
 
-    t = transaction.get()
-    #t.addAfterCommitHook(accreditation_hook, kws={'object_uid':object.UID(), 'parent':parent})
-    #t.addAfterCommitHook(accreditation_async_hook, kws={'object':object})
-    accreditation_async_hook(1, object)
+        t = transaction.get()
+        accreditation_async_hook(1, object)
+    except Exception,e:
+        from logging import getLogger
+        log = getLogger('cs.accreditedfile.file_checks')
+        log.info(e)
 
+        
 def accreditation_async_hook(succeeded, object):
 
     from logging import getLogger
@@ -54,27 +55,15 @@ def accreditation_hook(succeeded, object_uid, parent):
             getPublicationAccreditation(items[0].getObject())            
             log.info('Got accreditation')
 
-
 def accreditation(object):
-    import logging
-    from logging import getLogger
-    log = getLogger('cs.accreditedfile.accreditation')
-    log.addHandler(logging.handlers.RotatingFileHandler('cs.log'))
-
-    
-    registry = getUtility(IRegistry)
-    private_key = registry[u'cs.accreditedfile.applicationkey']
-    certificate = registry[u'cs.accreditedfile.applicationcertificate']
-    endpointurl = registry[u'cs.accreditedfile.accrediterendpointurl']
-    plonesiteid = registry[u'cs.accreditedfile.plonesiteid']
-    siteurl = registry[u'cs.accreditedfile.plonesiteurl']
-
-
-    errorcode = None
-    cert_path = createTemporaryFile(certificate)
-    pkey_path = createTemporaryFile(private_key)
+    """
+    Helper method to get the accreditation for file
+    with the given extension and url and expiration date
+    """
+    date = DT2dt(DateTime(object.ExpirationDate()))
+    field = object.getField('file')
+    extension = field.getFilename(object).rsplit('.')[-1]
     url = object.absolute_url()
-
     if not url.startswith('http'):
         # XXX
         # Testing shows that calling this
@@ -84,9 +73,30 @@ def accreditation(object):
         # corresponding to the plone-site id
         url = siteurl + url.split(plonesiteid)[-1]
 
-    f_revision = DT2dt(DateTime(object.ExpirationDate()))
-    field = object.getField('file')
-    f_extension = field.getFilename(object).rsplit('.')[-1]
+    result, accredited_url = get_accreditation_for_url(url, object.Title(), extension, date, object.Language())
+    if result and accredited_url is not None:
+        object.setUrl(accredited_url)
+        return 1
+    return 0
+
+def get_accreditation_for_url(url, title, f_extension, f_revision, language):
+    import logging
+    from logging import getLogger
+    log = getLogger('cs.accreditedfile.accreditation')
+    log.addHandler(logging.handlers.RotatingFileHandler('cs.log'))
+    
+    registry = getUtility(IRegistry)
+    private_key = registry[u'cs.accreditedfile.applicationkey']
+    certificate = registry[u'cs.accreditedfile.applicationcertificate']
+    endpointurl = registry[u'cs.accreditedfile.accrediterendpointurl']
+    plonesiteid = registry[u'cs.accreditedfile.plonesiteid']
+    siteurl = registry[u'cs.accreditedfile.plonesiteurl']
+
+    errorcode = None
+    cert_path = createTemporaryFile(certificate)
+    pkey_path = createTemporaryFile(private_key)
+
+    accredited_url = None
     
     try:
         ip = socket.gethostbyaddr(url.split('/')[2])[2][0]
@@ -103,7 +113,7 @@ def accreditation(object):
                                          mi_ip=ip,
                                          mi_puerto=url.startswith('https:') and 443 or 8080,
                                          mi_seguridad=url.startswith('https:'),
-                                         mi_titulo=object.Title().decode('utf-8'),
+                                         mi_titulo=title.decode('utf-8'),
                                          mi_fecharevision=f_revision,
                                          mi_tipo_firma=f_extension,
                                          )
@@ -115,19 +125,18 @@ def accreditation(object):
             if item.key == 'tipo' and item.value == 'error':
                 # Handle error
                 for item2 in data.item:
-                    if object.Language() == 'eu' and item2.key == 'msjerror_eus':
+                    if language == 'eu' and item2.key == 'msjerror_eus':
                         errorcode = item.value
-                    elif object.Language() == 'es' and item2.key == 'msjerror_cas':
+                    elif language == 'es' and item2.key == 'msjerror_cas':
                         errorcode = item.value
-                    elif object.Language() not in ['eu', 'es'] and item2.key == 'coderror':
+                    elif language not in ['eu', 'es'] and item2.key == 'coderror':
                         errorcode = item2.value
                         
             elif item.key == 'tipo' and item.value == 'url':
                 for item2 in data.item:
                     if item2.key == 'url_pdf':
-                        object.setUrl(item2.value)
+                        accredited_url = item2.value
                         log.info(item2.value)
-                        log.info(object.getUrl())
                         result = 1
 
         if errorcode is not None:
@@ -142,7 +151,7 @@ def accreditation(object):
         os.remove(cert_path)
         os.remove(pkey_path)
 
-    return result
+    return result, accredited_url
 
 
 
