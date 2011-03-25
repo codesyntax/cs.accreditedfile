@@ -104,6 +104,8 @@ def get_accreditation_for_url(url, title, f_extension, f_revision, language):
         ip = '127.0.0.1'
 
     try:
+        import pdb;pdb.set_trace()
+        
         import time
         time.sleep(5)
         log.info(url)
