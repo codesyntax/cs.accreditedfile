@@ -104,14 +104,12 @@ def get_accreditation_for_url(url, title, f_extension, f_revision, language):
         ip = '127.0.0.1'
 
     try:       
-        import time
-        time.sleep(5)
         log.info(url)
         log.info(f_extension)
         client = getClient(endpointurl, pkey_path, cert_path)
         data = client.service.constancia(mi_url=base64.encodestring(url),
                                          mi_ip=ip,
-                                         mi_puerto=url.startswith('https:') and 443 or 8080,
+                                         mi_puerto=url.startswith('https:') and 443 or 80,
                                          mi_seguridad=url.startswith('https:'),
                                          mi_titulo=title.decode('utf-8'),
                                          mi_fecharevision=f_revision,
