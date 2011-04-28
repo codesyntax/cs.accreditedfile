@@ -82,7 +82,7 @@ def accreditation(object):
 def get_accreditation_for_url(url, title, f_extension, f_revision, language):
     import logging
     from logging import getLogger
-    log = getLogger('cs.accreditedfile.accreditation')
+    log = getLogger('cs.accreditedfile.subscriber.get_accreditation_for_url')
     log.addHandler(logging.handlers.RotatingFileHandler('cs.log'))
     
     registry = getUtility(IRegistry)
@@ -103,7 +103,9 @@ def get_accreditation_for_url(url, title, f_extension, f_revision, language):
     except:
         ip = '127.0.0.1'
 
-    try:       
+    try:
+        import pdb;pdb.set_trace()
+        
         log.info(url)
         log.info(f_extension)
         client = getClient(endpointurl, pkey_path, cert_path)
@@ -155,7 +157,7 @@ def get_accreditation_for_url(url, title, f_extension, f_revision, language):
 
 def getPublicationAccreditation(object):
     from logging import getLogger
-    log = getLogger('cs.accreditedfile.getPublicationAccreditation')       
+    log = getLogger('cs.accreditedfile.subscriber.getPublicationAccreditation')       
 
     putils = getToolByName(object, 'plone_utils')
 
