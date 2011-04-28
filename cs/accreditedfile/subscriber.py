@@ -104,8 +104,6 @@ def get_accreditation_for_url(url, title, f_extension, f_revision, language):
         ip = '127.0.0.1'
 
     try:
-        import pdb;pdb.set_trace()
-        
         log.info(url)
         log.info(f_extension)
         client = getClient(endpointurl, pkey_path, cert_path)
