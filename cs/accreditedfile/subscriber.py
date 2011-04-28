@@ -3,7 +3,7 @@ from zope.component import getUtility
 from plone.registry.interfaces import IRegistry
 from Products.ATContentTypes.utils import DT2dt
 from DateTime import DateTime
-
+from Products.CMFPlone.utils import safe_unicode
 import base64, socket, tempfile, os
 
 from helpers import getClient
@@ -111,7 +111,7 @@ def get_accreditation_for_url(url, title, f_extension, f_revision, language):
                                          mi_ip=ip,
                                          mi_puerto=url.startswith('https:') and 443 or 80,
                                          mi_seguridad=url.startswith('https:'),
-                                         mi_titulo=title.decode('utf-8'),
+                                         mi_titulo=safe_unicode(title),
                                          mi_fecharevision=f_revision,
                                          mi_tipo_firma=f_extension,
                                          )
