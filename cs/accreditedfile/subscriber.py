@@ -71,6 +71,9 @@ def accreditation(object):
         # add the http beforehand, so we have 
         # to add it manually, removing the part
         # corresponding to the plone-site id
+        registry = getUtility(IRegistry)
+        siteurl = registry[u'cs.accreditedfile.plonesiteurl']
+        plonesiteid = registry[u'cs.accreditedfile.plonesiteid']
         url = siteurl + url.split(plonesiteid)[-1]
 
     result, accredited_url = get_accreditation_for_url(url, object.Title(), extension, date, object.Language())
@@ -169,26 +172,6 @@ def getPublicationAccreditation(object):
             putils.addPortalMessage(_(u'You have not set an expiration date for this file. Set it first and then try to get the accreditation using the menu'), type='warning')
             log.info('Not expiration date')
             return 
-
-    """
-    field = object.getField('file')
-    f_extension = field.getFilename(object).rsplit('.')[-1]
-    if len(f_extension) > 3:
-        # if the extension length is bigger than 2
-        # we haven't found the correct extension
-        # so try guessing from the content-type
-        mr = getToolByName(object, 'mimetypes_registry')
-        ct = field.getContentType(object)
-        if ct:
-            mts = mr.lookup(ct)
-            for mt in mts:
-                extensions = mt.extensions
-                if extensions:
-                    f_extension = extensions[0]
-                    break
-        else:
-            f_extension = 'pdf'
-    """
 
     result = accreditation(object)
 
