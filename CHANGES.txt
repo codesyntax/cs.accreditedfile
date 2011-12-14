@@ -1,6 +1,13 @@
 Changelog
 =========
-1.1 (unreleased)
+
+1.5 (2012-12-14)
+--------------------
+- Translations
+  [erral]
+
+
+1.1-1.4 (unreleased)
 -------------------
 - File extensions handling corrections
   [erral]
