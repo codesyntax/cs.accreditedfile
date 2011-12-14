@@ -1,0 +1,55 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2011-12-14 08:08+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"Language-Code: en\n"
+"Language-Name: English\n"
+"Preferred-Encodings: utf-8 latin1\n"
+"Domain: DOMAIN\n"
+
+#: ./subscriber.py:180
+msgid "Accreditation correct"
+msgstr ""
+
+#: ./profiles/default/types/AccreditedFile.xml
+msgid "AccreditedFile"
+msgstr ""
+
+#: ./subscriber.py:184
+msgid "An error occurred getting the accreditation. Try again with the menu option: %(errorcode)s"
+msgstr ""
+
+#: ./profiles/default/types/AccreditedFile.xml
+msgid "File with publication accreditation by Izenpe"
+msgstr ""
+
+#: ./profiles/default/types/AccreditedFile.xml
+msgid "Get accreditation"
+msgstr ""
+
+#: ./subscriber.py:172
+msgid "You have not set an expiration date for this file. Set it first and then try to get the accreditation using the menu"
+msgstr ""
+
+#. Default: "${accrediter} offers publication accreditation for this document at this URL:<br />${accreditation_url}"
+#: ./browser/accreditedfileview.pt:18
+msgid "accreditation_message"
+msgstr ""
+
+#. Default: "Publication accreditation"
+#: ./browser/accreditedfileview.pt:13
+msgid "heading_publication_credit"
+msgstr ""
+
+#. Default: "Accreditation URL"
+#: ./content/accreditedfile.py:28
+msgid "label_url"
+msgstr ""
+

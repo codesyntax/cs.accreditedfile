@@ -1,0 +1,56 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: cs.accreditedfile\n"
+"POT-Creation-Date: 2011-12-14 08:08+0000\n"
+"PO-Revision-Date: 2011-12-14 09:08+0100\n"
+"Last-Translator: Mikel Larreategi <mlarreategi@codesyntax.com>\n"
+"Language-Team: es <es@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"Language-Code: en\n"
+"Language-Name: English\n"
+"Preferred-Encodings: utf-8 latin1\n"
+"Domain: DOMAIN\n"
+"X-Poedit-Language: Spanish\n"
+
+#: ./subscriber.py:180
+msgid "Accreditation correct"
+msgstr "Acreditación correcta"
+
+#: ./profiles/default/types/AccreditedFile.xml
+msgid "AccreditedFile"
+msgstr "Archivo acreditado"
+
+#: ./subscriber.py:184
+msgid "An error occurred getting the accreditation. Try again with the menu option: %(errorcode)s"
+msgstr "Ha ocurrido un error obteniendo la acreditación para el archivo. Inténtelo de nuevo con la opción del menú: %(errorcode)s"
+
+#: ./profiles/default/types/AccreditedFile.xml
+msgid "File with publication accreditation by Izenpe"
+msgstr "Archivo con publicación acreditada por Izenpe"
+
+#: ./profiles/default/types/AccreditedFile.xml
+msgid "Get accreditation"
+msgstr "Obtener acreditación"
+
+#: ./subscriber.py:172
+msgid "You have not set an expiration date for this file. Set it first and then try to get the accreditation using the menu"
+msgstr "No ha introducido una fecha de terminación o caducidad para este archivo. Introdúzcala primero y después solicite la acreditación utilizando la opción del menú."
+
+#. Default: "${accrediter} offers publication accreditation for this document at this URL:<br />${accreditation_url}"
+#: ./browser/accreditedfileview.pt:18
+msgid "accreditation_message"
+msgstr "${accrediter} certifica la publicación de este documento. Consulte el certificado: ${accreditation_url}"
+
+#. Default: "Publication accreditation"
+#: ./browser/accreditedfileview.pt:13
+msgid "heading_publication_credit"
+msgstr "Acreditación de publicación"
+
+#. Default: "Accreditation URL"
+#: ./content/accreditedfile.py:28
+msgid "label_url"
+msgstr "Dirección de acreditación"
+

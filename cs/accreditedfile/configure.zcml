@@ -6,6 +6,8 @@
     i18n_domain="cs.accreditedfile">
     
   <five:registerPackage package="." initialize=".initialize" />
+  <i18n:registerTranslations directory="locales" />
+
 
   <!-- Include the sub-packages that use their own configure.zcml files. -->
   <include package=".browser" />
@@ -22,8 +24,6 @@
   
   <!-- -*- extra stuff goes here -*- -->
 
-  <include package=".browser" />
-  
   <subscriber for=".interfaces.IAccreditedFile
                    Products.Archetypes.interfaces.IObjectInitializedEvent"
               handler=".subscriber.file_checks" />

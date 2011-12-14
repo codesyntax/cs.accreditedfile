@@ -37,10 +37,4 @@
     visible="True">
   <permission value="Modify portal content"/>
  </action>
- <action title="Get accreditation" action_id="get_accreditation"
-    category="object" condition_expr="not:object/getUrl" icon_expr=""
-    link_target="" url_expr="string:${object_url}/get_external_accreditation"
-    visible="True">
-  <permission value="Modify portal content"/>
- </action>
 </object>
