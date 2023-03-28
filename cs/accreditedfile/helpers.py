@@ -1,38 +1,111 @@
 # -*- encoding: utf-8 -*-
+import functools
+import traceback
+
 import httplib
+import requests
+import suds.transport as transport
 import urllib2
-from suds.transport.https import HttpTransport
+from StringIO import StringIO
 from suds.client import Client
 from suds.options import Options
+from suds.transport import Reply, TransportError
+from suds.transport.http import HttpAuthenticated
+from suds.transport.https import HttpTransport
+
+from requests_pkcs12 import get as pkcs12_get
+from requests_pkcs12 import post as pkcs12_post
 
 
-def getClient(url, key, cert):
-    transport = HttpClientAuthTransport(key, cert)
-    return Client(url, transport = transport)
+def handle_errors(f):
+    @functools.wraps(f)
+    def wrapper(*args, **kwargs):
+        try:
+            return f(*args, **kwargs)
+        except requests.HTTPError as e:
+            buf = StringIO(e.response.content)
+            raise transport.TransportError(
+                "Error in requests\n" + traceback.format_exc(),
+                e.response.status_code,
+                buf,
+            )
+        except requests.RequestException:
+            buf = StringIO(traceback.format_exc().encode("utf-8"))
+            raise transport.TransportError(
+                "Error in requests\n" + traceback.format_exc(),
+                000,
+                buf,
+            )
+
+    return wrapper
 
 
-#SUDS Client Auth solution
-class HttpClientAuthTransport(HttpTransport):
-    def __init__(self, key, cert, options = Options(),):
-        HttpTransport.__init__(self)#, options)
-        self.urlopener = urllib2.build_opener(HTTPSClientAuthHandler(key, cert))
+class RequestsTransport(transport.Transport):
+    def __init__(
+        self, session=None, pkcs12_file=None, pkcs12_pass=None, verify=False
+    ):
+        transport.Transport.__init__(self)
+        self._session = session or requests.Session()
+        self.pkcs12_file = pkcs12_file
+        self.pkcs12_pass = pkcs12_pass
+        self.verify = verify
 
-#HTTPS Client Auth solution for urllib2, inspired by
-# http://bugs.python.org/issue3466
-# and improved by David Norton of Three Pillar Software. In this
-# implementation, we use properties passed in rather than static module
-# fields.
-class HTTPSClientAuthHandler(urllib2.HTTPSHandler):
-    def __init__(self, key, cert):
-        urllib2.HTTPSHandler.__init__(self)
-        self.key = key
-        self.cert = cert
-    def https_open(self, req):
-        #Rather than pass in a reference to a connection class, we pass in
-        # a reference to a function which, for all intents and purposes,
-        # will behave as a constructor
-        return self.do_open(self.getConnection, req)
-    def getConnection(self, host, timeout=None):
-        return httplib.HTTPSConnection(host, key_file=self.key, cert_file=self.cert)
+    @handle_errors
+    def open(self, request):
+        if self.pkcs12_file and self.pkcs12_pass:
+            import pdb
+
+            pdb.set_trace()
+            a = 1
+
+            resp = pkcs12_get(
+                request.url,
+                pkcs12_filename=self.pkcs12_file,
+                pkcs12_password=self.pkcs12_pass,
+                verify=self.verify,
+            )
+        else:
+            resp = self._session.get(request.url, verify=self.verify)
+        resp.raise_for_status()
+        return StringIO(resp.content)
+
+    @handle_errors
+    def send(self, request):
+        if self.pkcs12_file and self.pkcs12_pass:
+            import pdb
+
+            pdb.set_trace()
+            a = 1
+
+            resp = pkcs12_post(
+                request.url,
+                data=request.message,
+                pkcs12_filename=self.pkcs12_file,
+                pkcs12_password=self.pkcs12_pass,
+                headers=request.headers,
+            )
+        else:
+            resp = self._session.post(
+                request.url,
+                data=request.message,
+                headers=request.headers,
+            )
+        if resp.headers.get("content-type") not in (
+            "text/xml",
+            "application/soap+xml",
+        ):
+            resp.raise_for_status()
+        return transport.Reply(
+            resp.status_code,
+            resp.headers,
+            resp.content,
+        )
 
 
+def getClient2(wsdl_uri, pkcs12_file, pkcs12_pass):
+
+    headers = {"Content-Type": "text/xml;charset=UTF-8", "SOAPAction": ""}
+    t = RequestsTransport(
+        pkcs12_file=pkcs12_file, pkcs12_pass=pkcs12_pass, verify=False
+    )
+    return Client(wsdl_uri, headers=headers, transport=t)
