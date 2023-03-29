@@ -11,4 +11,4 @@ class Accreditation(BrowserView):
         alsoProvides(self.request, IDisableCSRFProtection)
         context = aq_inner(self.context)
         getPublicationAccreditation(context)
-        return self.request.response.redirect(context.absolute_url() + "/view")
+        return 1
