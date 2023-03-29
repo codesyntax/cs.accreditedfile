@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+import base64
 import os
 import socket
 import tempfile
@@ -65,7 +67,7 @@ def get_accreditation_for_url(url, title, f_extension, f_revision, language):
     data = requests.post(
         endpointurl,
         json={
-            "url": "https://www.eibar.eus:443/eu/iragarki-ohola/17-2020/ediktua/at_download/file",
+            "url": base64.encodestring(url),
             "ip": ip,
             "port": url.startswith("https:") and 443 or 80,
             "security": url.startswith("https:"),
