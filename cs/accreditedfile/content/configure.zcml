@@ -1,10 +1,11 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
     xmlns:five="http://namespaces.zope.org/five"
-    i18n_domain="cs.accreditedfile">
+    i18n_domain="cs.accreditedfile"
+    >
 
   <!-- configure your content components here -->
-  
+
   <!-- -*- extra stuff goes here -*- -->
   <class class=".accreditedfile.AccreditedFile">
     <require
@@ -12,5 +13,11 @@
         interface="..interfaces.IAccreditedFile"
         />
   </class>
+
+  <adapter
+      factory="plone.app.blob.subtypes.file.SchemaExtender"
+      for="plone.app.blob.interfaces.IATBlobFile"
+      name="plone.app.blob.subtypes.accreditedfile"
+      />
 
 </configure>

@@ -4,12 +4,8 @@
 from zope.interface import implements
 from zope.i18n import translate
 from Acquisition import aq_parent
-from plone.app.blob.field import FileField
 
-try:
-    from Products.LinguaPlone import public as atapi
-except ImportError:
-    from Products.Archetypes import atapi
+from Products.Archetypes import atapi
 from Products.ATContentTypes.content import file
 from Products.ATContentTypes.content import schemata
 from Products.Archetypes import PloneMessageFactory as _PMF
@@ -22,17 +18,6 @@ from cs.accreditedfile.config import PROJECTNAME
 AccreditedFileSchema = file.ATFileSchema.copy() + atapi.Schema(
     (
         # -*- Your Archetypes field definitions here ... -*-
-        FileField(
-            "file",
-            required=False,
-            searchable=True,
-            languageIndependent=True,
-            widget=atapi.FileWidget(
-                description="",
-                label=_PMF(u"label_file", default=u"File"),
-                show_content_type=False,
-            ),
-        ),
         atapi.StringField(
             "url",
             required=False,
