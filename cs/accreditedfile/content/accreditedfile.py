@@ -27,7 +27,6 @@ AccreditedFileSchema = file.ATFileSchema.copy() + atapi.Schema(
             widget=atapi.StringWidget(
                 description="",
                 label=_(u"label_url", default=u"Accreditation URL"),
-                visible={"view": "visible", "edit": "invisible"},
             ),
         ),
     )

@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import base64
 import os
 import socket
 import tempfile
@@ -67,7 +66,7 @@ def get_accreditation_for_url(url, title, f_extension, f_revision, language):
     data = requests.post(
         endpointurl,
         json={
-            "url": base64.encodestring(url),
+            "url": url,
             "ip": ip,
             "port": url.startswith("https:") and 443 or 80,
             "security": url.startswith("https:"),
