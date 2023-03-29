@@ -16,7 +16,7 @@
 
   <adapter
       factory="plone.app.blob.subtypes.file.SchemaExtender"
-      for="plone.app.blob.interfaces.IATBlobFile"
+      for="cs.accreditedfile.interfaces.IAccreditedFile"
       name="plone.app.blob.subtypes.accreditedfile"
       />
 
