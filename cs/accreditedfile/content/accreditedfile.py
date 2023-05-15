@@ -5,7 +5,10 @@ from zope.interface import implements
 from zope.i18n import translate
 from Acquisition import aq_parent
 
-from Products.Archetypes import atapi
+try:
+    from Products.LinguaPlone import public as atapi
+except ImportError:
+    from Products.Archetypes import atapi
 from Products.ATContentTypes.content import file
 from Products.ATContentTypes.content import schemata
 from Products.Archetypes import PloneMessageFactory as _PMF
