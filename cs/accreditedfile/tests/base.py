@@ -37,7 +37,8 @@ def setup_product():
 
     fiveconfigure.debug_mode = True
     import cs.accreditedfile
-    zcml.load_config('configure.zcml', cs.accreditedfile)
+
+    zcml.load_config("configure.zcml", cs.accreditedfile)
     fiveconfigure.debug_mode = False
 
     # We need to tell the testing framework that these products
@@ -51,14 +52,15 @@ def setup_product():
     # We may also need to load dependencies, e.g.:
     #   ztc.installPackage('borg.localrole')
 
-    ztc.installPackage('cs.accreditedfile')
+    ztc.installPackage("cs.accreditedfile")
+
 
 # The order here is important: We first call the (deferred) function
 # which installs the products we need for this product. Then, we let
 # PloneTestCase set up this product on installation.
 
 setup_product()
-ptc.setupPloneSite(products=['cs.accreditedfile'])
+ptc.setupPloneSite(products=["cs.accreditedfile"])
 
 
 class TestCase(ptc.PloneTestCase):
@@ -75,7 +77,5 @@ class FunctionalTestCase(ptc.FunctionalTestCase):
     """
 
     def afterSetUp(self):
-        roles = ('Member', 'Contributor')
-        self.portal.portal_membership.addMember('contributor',
-                                                'secret',
-                                                roles, [])
+        roles = ("Member", "Contributor")
+        self.portal.portal_membership.addMember("contributor", "secret", roles, [])

@@ -19,10 +19,12 @@ class IAccreditedFileView(Interface):
         Return the name of the accrediter
         """
 
+
 class AccreditedFileView(BrowserView):
     """
     AccreditedFile browser view
     """
+
     implements(IAccreditedFileView)
 
     def __init__(self, context, request):
@@ -31,13 +33,12 @@ class AccreditedFileView(BrowserView):
 
     @property
     def portal_catalog(self):
-        return getToolByName(self.context, 'portal_catalog')
+        return getToolByName(self.context, "portal_catalog")
 
     @property
     def portal(self):
-        return getToolByName(self.context, 'portal_url').getPortalObject()
-
+        return getToolByName(self.context, "portal_url").getPortalObject()
 
     def accrediter(self):
         registry = getUtility(IRegistry)
-        return registry['cs.accreditedfile.accreditername']
+        return registry["cs.accreditedfile.accreditername"]

@@ -11,7 +11,7 @@ from Products.CMFCore import utils
 # This will be imported with the special name "_" in most modules. Strings
 # like _(u"message") will then be extracted by i18n tools for translation.
 
-accreditedfileMessageFactory = MessageFactory('cs.accreditedfile')
+accreditedfileMessageFactory = MessageFactory("cs.accreditedfile")
 
 
 def initialize(context):
@@ -32,8 +32,8 @@ def initialize(context):
     # once.
 
     content_types, constructors, ftis = atapi.process_types(
-        atapi.listTypes(config.PROJECTNAME),
-        config.PROJECTNAME)
+        atapi.listTypes(config.PROJECTNAME), config.PROJECTNAME
+    )
 
     # Now initialize all these content types. The initialization process takes
     # care of registering low-level Zope 2 factories, including the relevant
@@ -43,8 +43,9 @@ def initialize(context):
     # in the GenericSetup profile.
 
     for atype, constructor in zip(content_types, constructors):
-        utils.ContentInit('%s: %s' % (config.PROJECTNAME, atype.portal_type),
-            content_types=(atype, ),
+        utils.ContentInit(
+            "%s: %s" % (config.PROJECTNAME, atype.portal_type),
+            content_types=(atype,),
             permission=config.ADD_PERMISSIONS[atype.portal_type],
             extra_constructors=(constructor,),
-            ).initialize(context)
+        ).initialize(context)

@@ -41,9 +41,7 @@ def handle_errors(f):
 
 
 class RequestsTransport(transport.Transport):
-    def __init__(
-        self, session=None, pkcs12_file=None, pkcs12_pass=None, verify=False
-    ):
+    def __init__(self, session=None, pkcs12_file=None, pkcs12_pass=None, verify=False):
         transport.Transport.__init__(self)
         self._session = session or requests.Session()
         self.pkcs12_file = pkcs12_file
