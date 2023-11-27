@@ -12,6 +12,7 @@ from Products.ATContentTypes.utils import DT2dt
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.utils import safe_unicode
 from zope.component import getUtility
+from logging import getLogger
 
 
 def createTemporaryFile(contents):
@@ -42,12 +43,20 @@ def accreditation(object):
         plonesiteid = registry[u"cs.accreditedfile.plonesiteid"]
         url = siteurl + url.split(plonesiteid)[-1]
 
-    result, accredited_url = get_accreditation_for_url(
+    result, accredited_url, message = get_accreditation_for_url(
         url, object.Title(), extension, date, object.Language()
     )
-    if result and accredited_url is not None:
-        object.setUrl(accredited_url)
+    if result and accredited_url:
+        if result == 1:
+            object.setUrl(accredited_url)
+            log = getLogger(__name__)
+            log.info('OK Izenpe: url: %s message: %s', url, message)
+        else:
+            log.info('Error Izenpe: url: %s message: %s', url, message)
         return 1
+    else:
+        log.info('Error Izenpe: url: %s message: %s', url, message)
+
     return 0
 
 
