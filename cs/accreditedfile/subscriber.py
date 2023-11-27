@@ -51,12 +51,12 @@ def accreditation(object):
             object.setUrl(accredited_url)
             log = getLogger(__name__)
             log.info("OK Izenpe: url: %s message: %s", url, message)
+            return 1
         else:
             log.info("Error Izenpe: url: %s message: %s", url, message)
-        return 1
-    else:
-        log.info("Error Izenpe: url: %s message: %s", url, message)
+            return 0
 
+    log.info("Error Izenpe: url: %s message: %s", url, message)
     return 0
 
 
