@@ -136,7 +136,5 @@ def getPublicationAccreditation(object):
 def send_mail(message, object):
     mailhost = api.portal.get_tool('MailHost')
     portal = api.portal.get()
-    messageText = 'Izenperekin konexioaren emaitza: %s' % message
-    mailhost.send(messageText, mto='mlarreategi@codesyntax.com', mfrom=portal.email_from_address, subject='Izenpe emaitza',
-
-    )
+    messageText = 'Izenperekin konexioaren emaitza: %s. Dokumentua:%s' % (message, object.absolute_url())
+    mailhost.send(messageText, mto='mlarreategi@codesyntax.com', mfrom=portal.email_from_address, subject='Izenpe emaitza')
