@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from plone import api
 import os
 import socket
 import tempfile
@@ -51,13 +52,13 @@ def accreditation(object):
             object.setUrl(accredited_url)
             log = getLogger(__name__)
             log.info("OK Izenpe: url: %s message: %s", url, message)
-            return 1
+            return 1, message
         else:
             log.info("Error Izenpe: url: %s message: %s", url, message)
-            return 0
+            return 0, message
 
     log.info("Error Izenpe: url: %s message: %s", url, message)
-    return 0
+    return 0, message
 
 
 def get_accreditation_for_url(url, title, f_extension, f_revision, language):
@@ -113,10 +114,11 @@ def getPublicationAccreditation(object):
             )
             return
 
-    result = accreditation(object)
+    result, message = accreditation(object)
 
     if result == 1:
         putils.addPortalMessage(_("Accreditation correct"), type="info")
+        send_mail(message, object)
 
     else:
         putils.addPortalMessage(
@@ -127,3 +129,14 @@ def getPublicationAccreditation(object):
             % {"errorcode": result},
             type="warning",
         )
+        send_mail(message, object)
+
+
+
+def send_mail(message, object):
+    mailhost = api.portal.get_tool('MailHost')
+    portal = api.portal.get()
+    messageText = 'Izenperekin konexioaren emaitza: %s' % message
+    mailhost.send(messageText, mto='mlarreategi@codesyntax.com', mfrom=portal.email_from_address, subject='Izenpe emaitza',
+
+    )
