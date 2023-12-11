@@ -28,7 +28,7 @@ def accreditation(object):
     Helper method to get the accreditation for file
     with the given extension and url and expiration date
     """
-    date = object.expires.toZone("UTC").ISO8601()
+    date = object.expires().toZone("UTC").ISO8601()
     field = object.getField("file")
     extension = field.getFilename(object).rsplit(".")[-1]
     url = object.absolute_url()
