@@ -28,6 +28,7 @@ def accreditation(object):
     Helper method to get the accreditation for file
     with the given extension and url and expiration date
     """
+    log = getLogger(__name__)
     date = object.expires().toZone("UTC").ISO8601()
     field = object.getField("file")
     extension = field.getFilename(object).rsplit(".")[-1]
@@ -50,7 +51,6 @@ def accreditation(object):
     if result and accredited_url:
         if result == 1:
             object.setUrl(accredited_url)
-            log = getLogger(__name__)
             log.info("OK Izenpe: url: %s message: %s", url, message)
             return 1, message
         else:
