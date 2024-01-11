@@ -113,8 +113,10 @@ def getPublicationAccreditation(object):
                 type="warning",
             )
             return
-
-    result, message = accreditation(object)
+    try:
+        result, message = accreditation(object)
+    except:
+        send_mail(message, object)
 
     if result == 1:
         putils.addPortalMessage(_("Accreditation correct"), type="info")
