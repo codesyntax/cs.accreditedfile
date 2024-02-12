@@ -116,10 +116,13 @@ def getPublicationAccreditation(object):
     try:
         result, message = accreditation(object)
     except:
+        message = 'Errorea ziurtagiria lortzean'
         send_mail(message, object)
+        return 
 
     if result == 1:
         putils.addPortalMessage(_("Accreditation correct"), type="info")
+        message = 'Ziurtagiri zuzena'
         send_mail(message, object)
 
     else:
@@ -131,6 +134,7 @@ def getPublicationAccreditation(object):
             % {"errorcode": result},
             type="warning",
         )
+        message = 'Errorea ziurtagiria lortzean'
         send_mail(message, object)
 
 
